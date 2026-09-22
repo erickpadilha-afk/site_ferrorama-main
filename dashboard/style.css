@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+@view-transition {
+    navigation: auto;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+body {
+    background-color: #1c1c1c; 
+    color: #ffffff;
+    min-height: 100vh;
+    animation: fadeInPage 0.3s ease-in-out;
+}
+
+/* Sticky Bar Header */
+.sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #cca424;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    height: 60px; 
+    padding: 0;
+    width: 100%;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border-right: 1px solid #917519;
+    height: 100%;
+}
+
+.logo-container img {
+    height: 45px; 
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0 35px;
+    border-right: 1px solid #917519;
+    height: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: #ffffff; 
+    font-size: 22px; 
+}
+
+.nav-item.active {
+    background-color: #917519; 
+}
+
+.nav-item.active a {
+    color: #dfd29d; 
+}
+
+.tab-viajar {
+    border-top-right-radius: 35px;
+    border-right: none;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 20px;
+}
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.user-icon {
+    width: 26px;
+    height: 26px;
+    fill: #000000;
+}
+
+/* Conteúdo do Dashboard */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.stats-container {
+    background-color: #cca424; 
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 25px 10px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.info-card:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.stat-number {
+    font-size: 46px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.packages-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.pacote-card {
+    flex: 1;
+    height: 340px;
+    border-radius: 15px;
+    text-decoration: none; 
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #333;
+    transition: transform 0.2s;
+    display: block;
+}
+
+.pacote-card:hover {
+    transform: scale(1.01);
+}
+
+.pacote-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pacote-content h2, p {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 4px;
+}
+
+.pacote-serra {
+    background-image: url('serra.png');
+    opacity: 0.9;
+}
+
+.pacote-amazonia {
+    background-image: url('amazonia.png');
+}
+
+.parcelamento {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.preco {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.tag-oferta {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    color: #ff6b6b; 
+    font-size: 16px;
+}

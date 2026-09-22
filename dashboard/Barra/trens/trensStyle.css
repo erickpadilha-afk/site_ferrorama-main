@@ -1,0 +1,352 @@
+:root {
+    --bg-page: #1c1c1c;
+    --bg-input-gray: #e0e0e0;
+    --bg-input-active: #f5f5f5;
+    --bg-select-slate: #cbd5e1;
+    --gold-main: #cca424;
+    --gold-dark: #917519;
+    --gold-light: #dfd29d;
+    --text-white: #ffffff;
+    --text-dark: #333333;
+    --text-black: #000000;
+    --border-gray: #b5b5b5;
+    --btn-green: #00a843;
+    --btn-green-hover: #008f37;
+    --color-link: #0066cc;
+    --color-status-live: #c0392b;
+    --font-main: Arial, sans-serif;
+    --radius-small: 4px;
+    --radius-medium: 6px;
+    --radius-large: 8px;
+    --radius-pill: 35px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-main);
+}
+
+@view-transition {
+    navigation: auto;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+body {
+    background-color: var(--bg-page); 
+    color: var(--text-white);
+    min-height: 100vh;
+    animation: fadeInPage 0.3s ease-in-out;
+}
+
+.sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--gold-main);
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    height: 60px; 
+    padding: 0;
+    width: 100%;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border-right: 1px solid var(--gold-dark);
+    height: 100%;
+}
+
+.logo-container img {
+    height: 45px; 
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0 35px;
+    border-right: 1px solid var(--gold-dark);
+    height: 100%;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: var(--text-white); 
+    font-size: 22px; 
+}
+
+.nav-item.active {
+    background-color: var(--gold-dark); 
+}
+
+.nav-item.active a {
+    color: var(--gold-light); 
+}
+
+.tab-viajar {
+    border-top-right-radius: var(--radius-pill);
+    border-right: none;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 20px;
+}
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-white);
+    font-size: 22px;
+}
+
+.user-icon {
+    width: 26px;
+    height: 26px;
+    fill: var(--text-black);
+}
+
+/* Layout Principal */
+.main-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    gap: 50px;
+}
+
+.trains-section {
+    flex: 1.2;
+}
+
+.trains-section h2 {
+    color: var(--gold-main);
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.trains-section h2 small {
+    font-size: 18px;
+}
+
+.train-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.train-card {
+    background-color: var(--gold-main);
+    color: var(--text-black);
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: var(--radius-small);
+    transition: transform var(--transition-fast);
+}
+
+.train-card:hover {
+    transform: translateX(4px);
+}
+
+.train-icon {
+    font-size: 35px;
+    margin-right: 20px;
+}
+
+.train-info h3 {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.status {
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.status.live,
+.status.time {
+    color: var(--color-status-live); 
+}
+
+/* Formulário de Busca */
+.search-section {
+    flex: 0.8;
+}
+
+.search-box {
+    background-color: var(--gold-main);
+    padding: 30px 20px;
+    border-radius: var(--radius-large);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    background-color: var(--bg-input-gray);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-small);
+}
+
+.input-group.border-top {
+    border-top: 2px solid var(--border-gray);
+}
+
+.input-group label {
+    color: var(--text-dark);
+    width: 50px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.input-group input {
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: var(--text-black);
+}
+
+.trip-type {
+    display: flex;
+    gap: 10px;
+}
+
+.type-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background-color: var(--bg-input-gray);
+    color: var(--text-dark);
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: var(--radius-small);
+    transition: background-color var(--transition-fast);
+}
+
+.type-btn.active {
+    background-color: var(--bg-input-active);
+    box-shadow: inset 0px -3px 0px var(--text-dark);
+    font-weight: bold;
+    transition: all 0.5s ease;
+}
+
+.date-select, .passenger-select select {
+    background-color: var(--bg-select-slate);
+    padding: 12px;
+    border-radius: var(--radius-small);
+    color: var(--text-dark);
+    font-size: 14px;
+    width: 100%;
+    border: none;
+    outline: none;
+    
+}
+
+.date-select {
+    display: flex;
+    justify-content: space-between;
+}
+
+.passenger-select select {
+    appearance: menulist;
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    cursor: pointer;
+}
+
+.coupon-link {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.coupon-link:hover {
+    text-decoration: underline;
+}
+
+.btn-search {
+    background-color: var(--btn-green);
+    color: var(--text-white);
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: var(--radius-medium);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-search:hover {
+    background-color: var(--btn-green-hover);
+}
+
+.app-downloads {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.app-btn {
+    flex: 1;
+    background-color: var(--text-black);
+    color: var(--text-white);
+    border: none;
+    padding: 10px;
+    border-radius: var(--radius-small);
+    font-size: 11px;
+    cursor: pointer;
+    text-align: center;
+    transition: opacity var(--transition-fast);
+}
+
+.app-btn:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+}

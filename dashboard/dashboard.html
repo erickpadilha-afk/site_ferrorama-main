@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Train Track - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="sticky-bar">
+        <div class="nav-left">
+            <div class="logo-container">
+                <a href="dashboard.html">
+                    <img src="GTT logo.png" alt="Golden Train Track Logo" class="nav-logo">
+                </a>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="dashboard.html">Início</a></li>
+                <li class="nav-item"><a href="Barra/trens/trens.html">Trens</a></li>
+                <li class="nav-item tab-viajar"><a href="Barra/viajar/viajar.html">Viajar</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <a href="Barra/usuario/usuario.html" class="user-btn">
+                <span>Usuário</span>
+                <svg class="user-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <section class="stats-container">
+            <div class="info-card">
+                <span class="stat-number">1.573</span>
+                <span class="stat-label">Trens ativos</span>
+            </div>
+            <div class="info-card">
+                <span class="stat-number">142</span>
+                <span class="stat-label">Trens em manutenção</span>
+            </div>
+            <div class="info-card">
+                <span class="stat-number">1.391</span>
+                <span class="stat-label">Trens parados</span>
+            </div>
+        </section>
+
+        <section class="packages-container">
+            
+            <a href="Barra/viajar/viajar.html" class="pacote-card pacote-serra">
+                <div class="pacote-content">
+                    <h2>Pacote Serra Catarinense</h2>
+                    <p class="parcelamento">a partir de 3x</p>
+                    <p class="preco">R$ 60,00</p>
+                </div>
+            </a>
+
+            <a href="Barra/viajar/viajar.html" class="pacote-card pacote-amazonia">
+                <div class="pacote-content">
+                    <h2>Pacote Grande Amazônia</h2>
+                    <p class="parcelamento">a partir de 6x</p>
+                    <p class="preco">R$ 50,00</p>
+                    <span class="tag-oferta">*Ofertas Limitadas</span>
+                </div>
+            </a>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

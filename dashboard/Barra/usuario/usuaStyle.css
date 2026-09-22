@@ -1,0 +1,122 @@
+@view-transition {
+  navigation: auto;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.user-btn.active-user {
+    background-color: #917519;
+    color: #dfd29d;
+    border-color: #917519;
+}
+
+.user-btn.active-user .user-icon {
+    fill: #dfd29d;
+}
+
+.welcome-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.avatar-placeholder {
+    width: 130px;
+    height: 130px;
+    background-color: #000000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.welcome-text h2 {
+    font-size: 24px;
+    font-weight: normal;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.welcome-text h1 {
+    font-size: 28px;
+    font-weight: normal;
+    color: #ffffff;
+}
+
+.profile-card-container {
+    background-color: #cca424; 
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.profile-details-card {
+    background-color: #e5c654;
+    border-radius: 15px;
+    padding: 35px 40px;
+    color: #000000;
+    position: relative;
+}
+
+.info-group p {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.info-group .spaced-info {
+    margin-top: 20px;
+}
+
+.status-active {
+    color: #2b7a1a;
+    font-weight: bold;
+}
+
+.edit-profile-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000000;
+}
+
+.edit-profile-btn svg {
+    width: 38px;
+    height: 38px;
+}
+
+.logout-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    background-color: #000000;
+    color: #cca424;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 35px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #222222;
+}

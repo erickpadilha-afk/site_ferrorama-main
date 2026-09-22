@@ -1,0 +1,267 @@
+/* Reset global de margens e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ESTILIZAÇÃO DO HEADER --- */
+.navbar {
+    background-color: #cca424;
+    height: 55px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 15px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-box {
+    background-color: #aa891c;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-img {
+    height: 35px;
+    width: auto;
+}
+
+.nav-tabs {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.tab-item {
+    text-decoration: none;
+    font-size: 20px;
+    padding: 0 25px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: #836f23;
+}
+
+.tab-item.active {
+    background-color: #7b753f; 
+    color: #cca424;
+}
+
+.tab-viagens {
+    background-color: #dec343;
+    color: #ffffff;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    height: 90%;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-text {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.user-icon {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+}
+
+/* --- CORPO E DIAGRAMAÇÃO --- */
+.dashboard-wrapper {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Tamanho da Imagem Ampliado */
+.driver-container {
+    border: 1px solid #dec343;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 380px; /* Aumentado de 320px para 380px */
+    height: 500px; /* Aumentado de 440px para 500px */
+    display: flex;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.driver-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-title {
+    color: #dec343;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.yellow-panel {
+    background-color: #dec343;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.date-panel {
+    display: flex;
+    gap: 25px;
+    padding: 25px 30px;
+}
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.date-label {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.input-container {
+    background-color: #3b3726;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+}
+
+/* Customização do input type="date" para combinar com o visual */
+.input-container input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #cca424; 
+    font-weight: bold;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Garante visibilidade e comportamento do seletor nativo */
+.input-container input::-webkit-calendar-picker-indicator {
+    filter: invert(72%) sepia(57%) saturate(452%) hue-rotate(10deg) brightness(92%) contrast(87%);
+}
+
+.options-panel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
+}
+
+/* --- BOTÕES DO TIPO DE RELATÓRIO --- */
+.report-card {
+    background-color: #7b753f; /* Cor padrão não-selecionada */
+    border-radius: 8px;
+    padding: 18px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #403a1e; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.report-card:hover {
+    transform: translateY(-2px);
+    background-color: #8c8549;
+}
+
+/* Estado Ativo/Clicado (Muda a cor para o Amarelo do layout) */
+.report-card.active {
+    background-color: #b0a133;
+    color: #1e1e1e;
+    box-shadow: inset 0 0 0 2px #212121;
+}
+
+.card-icon-wrapper {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-label {
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Botão Gerar Relatório */
+.action-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.btn-submit {
+    background-color: #4f492b;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #635c36;
+}

@@ -1,0 +1,188 @@
+:root {
+    --color-bg-dark: black;
+    --color-bg-overlay: rgba(0, 0, 0, 0.6);
+    --color-gold-base: goldenrod;
+    --color-gold-light: rgb(231, 183, 61);
+    --color-gold-bright: rgb(224, 182, 75);
+    --color-pure-gold: gold;
+
+    --color-input-bg: rgba(102, 96, 61, 1);
+    --color-input-border: rgba(102, 96, 61, 1);
+    --color-input-hover-bg: rgb(70, 66, 45);
+    
+    --color-btn-bg: rgba(51, 49, 41, 1);
+    --color-btn-bg-translucent: rgba(51, 49, 41, 0.8);
+    --color-btn-hover-bg: rgb(87, 84, 74);
+    --color-btn-hover-border: rgb(124, 118, 81);
+
+    --font-main: Arial, sans-serif;
+
+    --transition-fast: all 0.2s ease;
+    --transition-normal: all 0.3s ease;
+    --transition-slow: all 0.7s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    gap: 15px; 
+    background-image: linear-gradient(var(--color-bg-overlay), var(--color-bg-overlay)), url('background-trem.png');
+    background-color: var(--color-bg-dark);
+    background-size: cover;
+    background-position: center;
+    font-family: var(--font-main);
+    text-align: center;
+}
+
+.logo-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle {
+    width: 350px;
+    height: 350px;
+    background-color: var(--color-pure-gold);
+    border: 5px solid var(--color-gold-base);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.logo {
+    position: relative;
+    z-index: 2;
+    max-width: 150%;
+    height: auto;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    width: 280px;
+    height: 40px;
+    border: 2px solid var(--color-input-border);
+    background-color: var(--color-input-bg);
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.input-group {
+    -webkit-text-fill-color: var(--color-gold-base);
+    display: flex;
+    justify-content: center;
+}
+
+.input-group input:hover {
+    background-color: var(--color-input-hover-bg);
+    border: 2px solid var(--color-input-hover-bg);
+    -webkit-text-fill-color: var(--color-gold-bright);
+    transform: scale(1.02);
+}
+
+.botoes-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 15px;              
+}
+
+.botoes-container #password-button {
+    display: block;
+    margin: 5px;
+    color: var(--color-gold-base);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+#password-button:hover {
+    color: var(--color-gold-light);
+}
+
+.botoes-container #login-button {
+    background: none;
+    border: none;
+    outline: none;
+    font: inherit;
+    cursor: pointer;
+    display: inline-block;
+    padding: 40px 60px;
+    font-size: 40px;
+    color: var(--color-gold-base);
+    margin: 5px;
+    background-color: var(--color-btn-bg);
+    border: 2px solid var(--color-input-border); 
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition-slow);
+}
+
+.botoes-container #login-button:hover {
+    transform: scale(1.04);
+    background-color: var(--color-btn-hover-bg);
+    color: var(--color-gold-light);
+    border: 2px solid var(--color-btn-hover-border);
+}
+
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    color: var(--color-gold-base);
+    align-items: center;
+}
+
+.cadastro-container #register-button {
+    color: var(--color-gold-base);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+#register-button:hover {
+    color: var(--color-gold-light);
+    text-decoration: underline;
+    transform: scale(1.02);
+}
+
+#report-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: var(--color-gold-base);
+    background-color: var(--color-btn-bg-translucent);
+    border: 2px solid var(--color-input-border); 
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition-normal);
+}
+
+#report-button:hover {
+    transform: scale(1.04);
+    background-color: var(--color-btn-hover-bg);
+    color: var(--color-gold-light);
+    border: 2px solid var(--color-btn-hover-border);
+}
