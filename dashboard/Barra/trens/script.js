@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Alternância entre 'Somente ida' e 'Ida e volta'
+
     const typeButtons = document.querySelectorAll(".type-btn");
 
     typeButtons.forEach(btn => {
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Manipulação do Formulário de Busca
+
     const searchForm = document.getElementById("search-form");
 
     if (searchForm) {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Modal ou prompt simples para cupom
+
     const couponLink = document.getElementById("add-coupon");
     if (couponLink) {
         couponLink.addEventListener("click", (e) => {

@@ -1,4 +1,3 @@
-/* Reset global de margens e padding */
 * {
     margin: 0;
     padding: 0;
@@ -14,7 +13,6 @@ body {
     flex-direction: column;
 }
 
-/* --- ESTILIZAÇÃO DO HEADER --- */
 .navbar {
     background-color: #cca424;
     height: 55px;
@@ -93,7 +91,7 @@ body {
     color: #000000;
 }
 
-/* --- CORPO E DIAGRAMAÇÃO --- */
+
 .dashboard-wrapper {
     display: flex;
     flex: 1;
@@ -106,13 +104,13 @@ body {
     width: 100%;
 }
 
-/* Tamanho da Imagem Ampliado */
+
 .driver-container {
     border: 1px solid #dec343;
     border-radius: 20px;
     overflow: hidden;
-    width: 380px; /* Aumentado de 320px para 380px */
-    height: 500px; /* Aumentado de 440px para 500px */
+    width: 380px;
+    height: 500px;
     display: flex;
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
@@ -177,7 +175,7 @@ body {
     padding: 8px 12px;
 }
 
-/* Customização do input type="date" para combinar com o visual */
+
 .input-container input {
     background: transparent;
     border: none;
@@ -189,7 +187,7 @@ body {
     cursor: pointer;
 }
 
-/* Garante visibilidade e comportamento do seletor nativo */
+
 .input-container input::-webkit-calendar-picker-indicator {
     filter: invert(72%) sepia(57%) saturate(452%) hue-rotate(10deg) brightness(92%) contrast(87%);
 }
@@ -201,9 +199,9 @@ body {
     padding: 20px;
 }
 
-/* --- BOTÕES DO TIPO DE RELATÓRIO --- */
+
 .report-card {
-    background-color: #7b753f; /* Cor padrão não-selecionada */
+    background-color: #7b753f;
     border-radius: 8px;
     padding: 18px 5px;
     display: flex;
@@ -222,7 +220,7 @@ body {
     background-color: #8c8549;
 }
 
-/* Estado Ativo/Clicado (Muda a cor para o Amarelo do layout) */
+
 .report-card.active {
     background-color: #b0a133;
     color: #1e1e1e;
@@ -243,7 +241,7 @@ body {
     white-space: nowrap;
 }
 
-/* Botão Gerar Relatório */
+
 .action-row {
     display: flex;
     justify-content: center;

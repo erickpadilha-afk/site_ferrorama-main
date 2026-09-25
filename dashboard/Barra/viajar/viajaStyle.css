@@ -33,12 +33,10 @@
     font-family: var(--font-main);
 }
 
-/* API de Transição do Navegador */
 @view-transition {
     navigation: auto;
 }
 
-/* Animação Suave de Transição de Página */
 @keyframes fadeInPage {
     from { 
         opacity: 0; 
@@ -52,11 +50,9 @@ body {
     background-color: var(--bg-page); 
     color: var(--text-white);
     min-height: 100vh;
-    /* Adicionado a transição em todas as páginas */
     animation: fadeInPage 0.3s ease-in-out; 
 }
 
-/* ================= Sticky Header ================= */
 .sticky-bar {
     position: sticky;
     top: 0;
@@ -158,7 +154,6 @@ body {
     fill: var(--text-black);
 }
 
-/* ================= Layout Principal (Trens) ================= */
 .main-container {
     display: flex;
     max-width: 1200px;
@@ -224,7 +219,6 @@ body {
     color: var(--color-status-live); 
 }
 
-/* ================= Busca de Bilhetes ================= */
 .search-section {
     flex: 0.8;
 }
@@ -365,7 +359,6 @@ body {
     opacity: 0.85;
 }
 
-/* ================= Perfil do Usuário ================= */
 .welcome-container {
     display: flex;
     align-items: center;

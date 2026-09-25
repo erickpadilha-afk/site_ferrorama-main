@@ -20,6 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
         radio.addEventListener('change', updateCheckout);
     });
 
-    // Atualiza os valores assim que a página é carregada
+
     updateCheckout();
 });

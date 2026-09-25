@@ -30,15 +30,17 @@
 
 body {
     display: flex;
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
-    gap: 15px; 
+    gap: 15px;
     background-image: linear-gradient(var(--color-bg-overlay), var(--color-bg-overlay)), url('background-trem.png');
     background-color: var(--color-bg-dark);
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     font-family: var(--font-main);
     text-align: center;
 }

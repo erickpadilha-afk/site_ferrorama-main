@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Tratamento dos botões da barra de navegação
     const navItems = document.querySelectorAll(".nav-item");
     const userBtn = document.querySelector(".user-btn");
 
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Tratamento de cliques nos pacotes
     const pacotes = document.querySelectorAll(".pacote-card");
 
     pacotes.forEach(pacote => {

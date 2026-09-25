@@ -41,7 +41,7 @@
 .avatar-placeholder {
     width: 130px;
     height: 130px;
-    background-color: #000000;
+    background-color: var(--color-gold-base);
     border-radius: 50%;
     display: flex;
     align-items: center;

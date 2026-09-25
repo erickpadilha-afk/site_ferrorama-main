@@ -1,3 +1,14 @@
+<?php
+session_start();
+require_once __DIR__ . '/../config/conexao.php';
+
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../pagina inicial/index.php");
+    exit;
+}
+
+$nome_usuario = $_SESSION['login'] ?? 'Usuário';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,24 +22,22 @@
     <nav class="sticky-bar">
         <div class="nav-left">
             <div class="logo-container">
-                <a href="dashboard.html">
-                    <img src="GTT logo.png" alt="Golden Train Track Logo" class="nav-logo">
+                <a href="dashboard.php">
+                    <img src="../images/GTT-logo.png" alt="Golden Train Track Logo" class="nav-logo">
                 </a>
             </div>
             
             <ul class="nav-links">
-                <li class="nav-item active"><a href="dashboard.html">Início</a></li>
+                <li class="nav-item active"><a href="dashboard.php">Início</a></li>
                 <li class="nav-item"><a href="Barra/trens/trens.html">Trens</a></li>
                 <li class="nav-item tab-viajar"><a href="Barra/viajar/viajar.html">Viajar</a></li>
             </ul>
         </div>
 
-        <div class="nav-right">
+        <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
             <a href="Barra/usuario/usuario.html" class="user-btn">
-                <span>Usuário</span>
-                <svg class="user-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+                <span><?php echo htmlspecialchars($nome_usuario); ?></span>
+                <img src="../images/usua.png" alt="User Icon" class="user-icon" style="width: 24px; height: 24px; margin-left: 8px;">
             </a>
         </div>
     </nav>

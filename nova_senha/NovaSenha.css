@@ -11,8 +11,7 @@ body {
     align-items: center; 
     min-height: 100vh;
     gap: 15px; 
-    /* Atualizado para a nova imagem de fundo */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('NovaSenha.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/NovaSenha.jpg');
     background-color: black;
     background-size: cover;
     background-position: center;
@@ -20,7 +19,6 @@ body {
     text-align: center;
 }
 
-/* Tamanho original igual ao das outras páginas */
 .logo-container {
     position: relative;
     width: 350px;

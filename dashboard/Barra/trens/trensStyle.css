@@ -137,7 +137,7 @@ body {
     fill: var(--text-black);
 }
 
-/* Layout Principal */
+
 .main-container {
     display: flex;
     max-width: 1200px;
@@ -203,7 +203,7 @@ body {
     color: var(--color-status-live); 
 }
 
-/* Formulário de Busca */
+
 .search-section {
     flex: 0.8;
 }

@@ -25,7 +25,6 @@ body {
     animation: fadeInPage 0.3s ease-in-out;
 }
 
-/* Sticky Bar Header */
 .sticky-bar {
     position: sticky;
     top: 0;
@@ -108,16 +107,21 @@ body {
     gap: 10px;
     text-decoration: none;
     color: #ffffff;
+    transition: transform 0.5s ease;
     font-size: 22px;
 }
 
+.user-btn:hover{
+    color: #dfd29d;
+    transform: scale(1.01);
+    transition: color 0.3s ease;
+}
 .user-icon {
     width: 26px;
     height: 26px;
     fill: #000000;
 }
 
-/* Conteúdo do Dashboard */
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -200,12 +204,11 @@ body {
 }
 
 .pacote-serra {
-    background-image: url('serra.png');
-    opacity: 0.9;
+    background-image: url('../images/serra.png');
 }
 
 .pacote-amazonia {
-    background-image: url('amazonia.png');
+    background-image: url('../images/amazonia.png');
 }
 
 .parcelamento {
