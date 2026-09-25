@@ -11,6 +11,15 @@
     }
 }
 
+:root {
+    --color-dark: black;
+    --color-bg-overlay: rgba(0, 0, 0, 0.6);
+    --color-gold-base: goldenrod;
+    --color-gold-light: rgb(231, 183, 61);
+    --color-gold-bright: rgb(224, 182, 75);
+    --color-pure-gold: gold;
+}
+
 .user-btn.active-user {
     background-color: #917519;
     color: #dfd29d;
