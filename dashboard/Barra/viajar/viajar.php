@@ -1,3 +1,37 @@
+<?php
+session_start();
+
+require_once __DIR__ . '/../../../config/conexao.php';
+
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../../../pagina-inicial/index.php");
+    exit;
+}
+
+$texto_usuario = '';
+
+if (isset($_SESSION['nome']) && !empty($_SESSION['nome'])) {
+    $texto_usuario = $_SESSION['nome'];
+} else {
+    $id_usuario = $_SESSION['id_usuario'];
+    $stmt = $conexao->prepare("SELECT nome FROM usuario WHERE id = ?");
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    
+    if ($user = $res->fetch_assoc()) {
+        $texto_usuario = $user['nome'];
+    } else {
+        $texto_usuario = $_SESSION['login'] ?? 'Usuário';
+    }
+}
+
+if (strpos($texto_usuario, '@') !== false) {
+    $texto_usuario = explode('@', $texto_usuario)[0];
+}
+$palavras = preg_split('/[\s._-]+/', trim($texto_usuario));
+$primeiro_nome = !empty($palavras[0]) ? mb_convert_case($palavras[0], MB_CASE_TITLE, "UTF-8") : 'Usuário';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,13 +51,13 @@
             </div>
             <ul class="nav-links">
                 <li class="nav-item"><a href="../../dashboard.php">Início</a></li>
-                <li class="nav-item"><a href="../trens/trens.html">Trens</a></li>
-                <li class="nav-item active tab-viajar"><a href="../viajar/viajar.html">Viajar</a></li>
+                <li class="nav-item"><a href="../trens/trens.php">Trens</a></li>
+                <li class="nav-item active tab-viajar"><a href="../viajar/viajar.php">Viajar</a></li>
             </ul>
         </div>
         <div class="nav-right">
-            <a href="../usuario/usuario.html" class="user-btn">
-                <span>Usuário</span>
+            <a href="../usuario/usuario.php" class="user-btn">
+                <span><?php echo htmlspecialchars($primeiro_nome); ?></span>
                 <svg class="user-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>

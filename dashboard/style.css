@@ -98,7 +98,7 @@ body {
     display: flex;
     align-items: center;
     height: 100%;
-    padding-right: 20px;
+    padding-right: 0; 
 }
 
 .user-btn {
@@ -107,15 +107,25 @@ body {
     gap: 10px;
     text-decoration: none;
     color: #ffffff;
-    transition: transform 0.5s ease;
     font-size: 22px;
+    height: 100%;      
+    padding: 0 25px;      
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.user-btn:hover{
+.user-btn:hover {
     color: #dfd29d;
-    transform: scale(1.01);
-    transition: color 0.3s ease;
 }
+
+.user-btn.active-user {
+    background-color: #917519;
+    color: #dfd29d;
+}
+
+.user-btn.active-user .user-icon {
+    fill: #dfd29d;
+}
+
 .user-icon {
     width: 26px;
     height: 26px;

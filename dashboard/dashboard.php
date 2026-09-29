@@ -7,7 +7,24 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-$nome_usuario = $_SESSION['login'] ?? 'Usuário';
+if (isset($_SESSION['nome']) && !empty($_SESSION['nome'])) {
+    $nome_completo = $_SESSION['nome'];
+} else {
+    $id_usuario = $_SESSION['id_usuario'];
+    $stmt = $conexao->prepare("SELECT nome FROM usuario WHERE id = ?");
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    
+    if ($user = $res->fetch_assoc()) {
+        $nome_completo = $user['nome'];
+    } else {
+        $nome_completo = $_SESSION['login'] ?? 'Usuário';
+    }
+}
+
+$partes_nome = explode(' ', trim($nome_completo));
+$primeiro_nome = $partes_nome[0];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -29,14 +46,14 @@ $nome_usuario = $_SESSION['login'] ?? 'Usuário';
             
             <ul class="nav-links">
                 <li class="nav-item active"><a href="dashboard.php">Início</a></li>
-                <li class="nav-item"><a href="Barra/trens/trens.html">Trens</a></li>
-                <li class="nav-item tab-viajar"><a href="Barra/viajar/viajar.html">Viajar</a></li>
+                <li class="nav-item"><a href="Barra/trens/trens.php">Trens</a></li>
+                <li class="nav-item tab-viajar"><a href="Barra/viajar/viajar.php">Viajar</a></li>
             </ul>
         </div>
 
         <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
-            <a href="Barra/usuario/usuario.html" class="user-btn">
-                <span><?php echo htmlspecialchars($nome_usuario); ?></span>
+            <a href="Barra/usuario/usuario.php" class="user-btn">
+                <span><?php echo htmlspecialchars($primeiro_nome); ?></span>
                 <img src="../images/usua.png" alt="User Icon" class="user-icon" style="width: 24px; height: 24px; margin-left: 8px;">
             </a>
         </div>

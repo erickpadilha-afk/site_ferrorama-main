@@ -8,7 +8,6 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-
 $mensagem = "";
 $erro = "";
 
@@ -78,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="input-group">
-                <input type="text" id="login" name="login" placeholder="Login / Usuário" required>
+                <input type="text" id="login" name="login" placeholder="Gmail" required>
             </div>
             
             <div class="input-group">

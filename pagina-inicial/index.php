@@ -26,7 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['login']      = $usuario['login'];
                 $_SESSION['papel']      = $usuario['papel'];
 
-                header("Location: ../dashboard/dashboard.php");
+                // Redireciona de acordo com o papel do usuário
+                if ($usuario['papel'] === 'administrador') {
+                    header("Location: ../admin/admin.php");
+                } elseif ($usuario['papel'] === 'maquinista') {
+                    header("Location: ../relatorio/relatorio.php");
+                } else {
+                    // Cliente / Gestor ou qualquer outro papel
+                    header("Location: ../dashboard/dashboard.php");
+                }
                 exit;
             }
         }
@@ -61,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form id="loginform" class="login-form" method="POST">
             <div class="input-group">
-                <input type="text" id="email" name="login" placeholder="Login ou E-mail" required>
+                <input type="text" id="email" name="login" placeholder="E-mail" required>
             </div>
             <div class="input-group">
                 <input type="password" id="senha" name="senha" placeholder="Senha" required>
@@ -69,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="botoes-container">
                 <a id="password-button" href="../nova_senha/NovaSenha.php">Esqueci a senha</a>
-                <button type="submit" id="login-button">Fazer login</button>
+                <button type="submit" id="login-button">Entrar</button>
             </div>
         </form>
     </div>
