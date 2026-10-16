@@ -13,56 +13,58 @@ $mensagem = "";
 $tipo_msg = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['gerar'])) {
-    $fk_id_trem = intval($_POST['fk_id_trem'] ?? 0);
-    $tipo_sensor = $_POST['tipo_sensor'] ?? 'velocidade';
-    $quantidade  = intval($_POST['quantidade'] ?? 10);
-    $gerar_anomalias = isset($_POST['gerar_anomalias']);
+    $fk_id_trem      = intval($_POST['fk_id_trem'] ?? 0);
+    $quantidade       = intval($_POST['quantidade'] ?? 10);
+    $gerar_anomalias  = isset($_POST['gerar_anomalias']);
 
     if ($fk_id_trem <= 0) {
         $mensagem = "Selecione um trem válido!";
         $tipo_msg = "erro";
     } else {
-        // Unidades por tipo
-        $unidades = [
-            'velocidade'  => 'km/h',
-            'temperatura' => '°C',
-            'consumo'     => 'L/h',
-            'vibracao'    => 'mm/s'
-        ];
-        $unidade = $unidades[$tipo_sensor] ?? 'un';
-        $limite_base = LIMITES_SENSORES[$tipo_sensor] ?? 50.00;
-
-        // CONSULTAS PREPARADAS FORA DO LAÇO (Requisito do Guia)
-        $stmt_leitura = $conexao->prepare("INSERT INTO leituras (fk_id_trem, tipo_sensor, valor, unidade, data_hora) VALUES (?, ?, ?, ?, ?)");
+        // PREPARAÇÃO DAS CONSULTAS FORA DO LAÇO (Requisito do Guia)
+        $stmt_leitura = $conexao->prepare("INSERT INTO leitura_sensor (fk_id_trem, data_hora, velocidade_kmh, temperatura_motor_c, consumo_litros_hora, vibracao_mm_s) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt_alerta  = $conexao->prepare("INSERT INTO alertas (id_leitura, tipo, severidade, mensagem, data_hora) VALUES (?, ?, ?, ?, ?)");
 
         $alertas_gerados = 0;
 
         for ($i = 0; $i < $quantidade; $i++) {
-            // Recua o tempo 1 minuto a cada iteração
+            // Recua o tempo 1 minuto a cada volta
             $data_hora = date('Y-m-d H:i:s', time() - ($i * 60));
 
-            // Faixas de sorteio com base no tipo
+            // Valores normais base
+            $vel  = mt_rand(4000, 7500) / 100; // 40.00 a 75.00 km/h
+            $temp = mt_rand(6000, 8500) / 100; // 60.00 a 85.00 °C
+            $cons = mt_rand(2000, 4500) / 100; // 20.00 a 45.00 L/h
+            $vib  = mt_rand(50, 250) / 100;    // 0.50 a 2.50 mm/s
+
+            // Se opção de anomalias estiver ligada, força alteração crítica a cada 3 voltas
             if ($gerar_anomalias && $i % 3 === 0) {
-                // Sorteia valor acima do limite (Atenção ou Crítico)
-                $valor = $limite_base + (mt_rand(1, 50) / 10);
-            } else {
-                // Sorteia valor normal
-                $valor = ($limite_base * 0.5) + (mt_rand(1, intval($limite_base * 0.4 * 10)) / 10);
+                $temp = mt_rand(9500, 11500) / 100; // Temperatura alta (95°C a 115°C)
             }
 
-            // Grava a leitura
-            $stmt_leitura->bind_param("isdss", $fk_id_trem, $tipo_sensor, $valor, $unidade, $data_hora);
+            // Grava a leitura na tabela leitura_sensor
+            $stmt_leitura->bind_param("isdddd", $fk_id_trem, $data_hora, $vel, $temp, $cons, $vib);
             $stmt_leitura->execute();
             $id_leitura = $conexao->insert_id;
 
-            // Classificação automática da regra
-            $severidade = classificar_leitura($tipo_sensor, $valor);
+            // Avalia classificação de regras
+            $sev_temp = classificar_leitura('temperatura', $temp);
+            $sev_vel  = classificar_leitura('velocidade', $vel);
 
-            // Grava alerta se não for normal
-            if ($severidade !== 'normal') {
-                $msg_alerta = "Alerta de " . ucfirst($tipo_sensor) . ": valor registrado " . number_format($valor, 2) . " " . $unidade . " ultrapassou o limite de " . $limite_base . " " . $unidade;
-                $stmt_alerta->bind_param("issss", $id_leitura, $tipo_sensor, $severidade, $msg_alerta, $data_hora);
+            // Gera alerta de temperatura se ultrapassar limite
+            if ($sev_temp !== 'normal') {
+                $msg = "Temperatura elevada no motor: " . number_format($temp, 1, ',', '.') . " °C";
+                $tipo = "temperatura";
+                $stmt_alerta->bind_param("issss", $id_leitura, $tipo, $sev_temp, $msg, $data_hora);
+                $stmt_alerta->execute();
+                $alertas_gerados++;
+            }
+
+            // Gera alerta de velocidade se ultrapassar limite
+            if ($sev_vel !== 'normal') {
+                $msg = "Excesso de velocidade detectado: " . number_format($vel, 1, ',', '.') . " km/h";
+                $tipo = "velocidade";
+                $stmt_alerta->bind_param("issss", $id_leitura, $tipo, $sev_vel, $msg, $data_hora);
                 $stmt_alerta->execute();
                 $alertas_gerados++;
             }
@@ -71,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['gerar'])) {
         $stmt_leitura->close();
         $stmt_alerta->close();
 
-        $mensagem = "{$quantidade} leituras geradas com sucesso! ({$alertas_gerados} alertas de risco criados)";
+        $mensagem = "{$quantidade} leituras geradas com sucesso na tabela leitura_sensor! ({$alertas_gerados} alertas criados)";
         $tipo_msg = "sucesso";
     }
 }
@@ -120,23 +122,13 @@ $trens = $conexao->query("SELECT id_trem, prefixo_trem, modelo_trem FROM trens O
             </div>
 
             <div class="form-group">
-                <label>Tipo de Sensor *</label>
-                <select name="tipo_sensor" required>
-                    <option value="velocidade">Velocidade (km/h)</option>
-                    <option value="temperatura">Temperatura Motor (°C)</option>
-                    <option value="consumo">Consumo (L/h)</option>
-                    <option value="vibracao">Vibração (mm/s)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label>Quantidade de Leituras a Gerar *</label>
                 <input type="number" name="quantidade" min="1" max="500" value="20" required>
             </div>
 
             <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
                 <input type="checkbox" id="anomalias" name="gerar_anomalias" value="1" checked>
-                <label for="anomalias" style="margin: 0;">Gerar anomalias (valores acima do limite para testar alertas)</label>
+                <label for="anomalias" style="margin: 0;">Gerar anomalias (valores altos para gerar alertas)</label>
             </div>
 
             <button type="submit" name="gerar" class="btn">Gerar Leituras</button>

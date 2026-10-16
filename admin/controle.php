@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../config/conexao.php';
 
+// Bloqueio de acesso para usuários não autenticados ou não administradores
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../pagina-inicial/index.php");
     exit;
@@ -12,6 +13,7 @@ if (isset($_SESSION['papel']) && $_SESSION['papel'] !== 'administrador') {
     exit;
 }
 
+// Obter nome do usuário logado
 if (isset($_SESSION['nome']) && !empty($_SESSION['nome'])) {
     $nome_completo = $_SESSION['nome'];
 } else {
@@ -45,7 +47,7 @@ $primeiro_nome = $partes_nome[0];
         <div class="nav-left">
             <div class="logo-container">
                 <a href="admin.php">
-                    <img src="../images/GTT-logo.png" alt="Golden Train Track Logo" class="nav-logo">
+                    <img src="../images/GTT-logo.png" alt="Golden Train Track Logo" class="nav-logo" onerror="this.style.display='none'">
                 </a>
             </div>
             
@@ -56,7 +58,7 @@ $primeiro_nome = $partes_nome[0];
         </div>
 
         <div class="nav-right">
-            <a href="../dashboard/Barra/usuario/usuario.php" class="user-btn">
+            <a href="admin_usuario.php" class="user-btn">
                 <span><?php echo htmlspecialchars($primeiro_nome); ?></span>
                 <svg class="user-icon" viewBox="0 0 24 24">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -71,6 +73,7 @@ $primeiro_nome = $partes_nome[0];
 
         <section class="control-grid">
             
+            <!-- Gestão de Trens -->
             <a href="admin_trem/gestao_trem.php" class="control-card">
                 <div class="card-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -84,6 +87,7 @@ $primeiro_nome = $partes_nome[0];
                 <p>Listar, buscar, cadastrar, editar e excluir trens com validação.</p>
             </a>
 
+            <!-- Gestão de Sensores -->
             <a href="admin_sensor/gestao_sensor.php" class="control-card">
                 <div class="card-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -91,9 +95,45 @@ $primeiro_nome = $partes_nome[0];
                     </svg>
                 </div>
                 <h2>Gestão de Sensores</h2>
-                <p>Cadastrar sensores vinculados aos trens, listar, editar e excluir.</p>
+                <p>Cadastrar sensores vinculados aos trens, listar, editar e consultar indicador.</p>
             </a>
 
+            <!-- Gestão de Rotas -->
+            <a href="admin_rota/gestao_rota.php" class="control-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                </div>
+                <h2>Gestão de Rotas</h2>
+                <p>Listar, filtrar por status/data/trem, cadastrar, editar e excluir viagens.</p>
+            </a>
+
+            <!-- Central de Alertas (Bloco 3) -->
+            <a href="../notificacoes_alertas.php" class="control-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <h2>Central de Alertas</h2>
+                <p>Visualizar notificações ativas com filtro por severidade e alertas críticos.</p>
+            </a>
+
+            <!-- Simulador de Leituras (Bloco 3) -->
+            <a href="../simulador.php" class="control-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <h2>Simulador de Sensores</h2>
+                <p>Gerar leituras automáticas e anomalias para testes do sistema.</p>
+            </a>
+
+            <!-- Gestão de Usuários -->
             <a href="admin_cliente/gestao_cliente.php" class="control-card">
                 <div class="card-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -103,18 +143,8 @@ $primeiro_nome = $partes_nome[0];
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                 </div>
-                <h2>Gestão de Usuários</h2>
+                <h2>Gestão de Clientes</h2>
                 <p>Gerenciamento de contas, perfis e permissões dos usuários.</p>
-            </a>
-
-            <a href="admin_rota/gestao_rota.php" class="control-card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 12h18M3 6h18M3 18h18"/>
-                    </svg>
-                </div>
-                <h2>Gestão de Rotas</h2>
-                <p>Listar, filtrar por status/data/trem, cadastrar, editar e excluir viagens.</p>
             </a>
 
         </section>

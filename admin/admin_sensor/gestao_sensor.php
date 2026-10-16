@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../config/conexao.php';
 
+// Bloqueio de acesso para usuários não autenticados ou não administradores
 if (!isset($_SESSION['id_usuario']) || ($_SESSION['papel'] ?? '') !== 'administrador') {
     header("Location: ../../pagina-inicial/index.php");
     exit;
@@ -10,6 +11,7 @@ if (!isset($_SESSION['id_usuario']) || ($_SESSION['papel'] ?? '') !== 'administr
 $mensagem = "";
 $tipo_mensagem = "";
 
+// --- PROCESSAR SALVAMENTO (INSERÇÃO E EDIÇÃO) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
     $id_leitura           = !empty($_POST['id_leitura']) ? intval($_POST['id_leitura']) : null;
     $fk_id_trem           = intval($_POST['fk_id_trem'] ?? 0);
@@ -49,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
     }
 }
 
+// --- PROCESSAR EXCLUSÃO ---
 if (isset($_GET['excluir'])) {
     $id_excluir = intval($_GET['excluir']);
     $stmt = $conexao->prepare("DELETE FROM leitura_sensor WHERE id_leitura = ?");
@@ -63,6 +66,7 @@ if (isset($_GET['excluir'])) {
     }
 }
 
+// --- FEEDBACK VIA URL ---
 if (isset($_GET['msg'])) {
     if ($_GET['msg'] === 'criado') {
         $mensagem = "Nova leitura do sensor registrada com sucesso!";
@@ -76,19 +80,21 @@ if (isset($_GET['msg'])) {
     }
 }
 
+// --- BUSCA DE TRENS PARA O SELECT ---
 $lista_trens = $conexao->query("SELECT id_trem, prefixo_trem, modelo_trem FROM trens ORDER BY prefixo_trem ASC");
 
+// --- CONSULTA DA ENTREGA 4: DADOS DA LEITURA + ÚLTIMO ALERTA CALCULADO ---
 $termo_busca = trim($_GET['busca'] ?? '');
 
 $sql = "SELECT l.*, t.prefixo_trem, t.modelo_trem,
-        (SELECT lei.valor 
-         FROM leituras lei 
-         WHERE lei.fk_id_trem = l.fk_id_trem 
-         ORDER BY lei.data_hora DESC LIMIT 1) AS ultima_leitura_valor,
-        (SELECT lei.unidade 
-         FROM leituras lei 
-         WHERE lei.fk_id_trem = l.fk_id_trem 
-         ORDER BY lei.data_hora DESC LIMIT 1) AS ultima_leitura_unidade
+        (SELECT a.mensagem 
+         FROM alertas a 
+         WHERE a.id_leitura = l.id_leitura 
+         ORDER BY a.data_hora DESC LIMIT 1) AS ultimo_alerta_msg,
+        (SELECT a.severidade 
+         FROM alertas a 
+         WHERE a.id_leitura = l.id_leitura 
+         ORDER BY a.data_hora DESC LIMIT 1) AS ultimo_alerta_sev
         FROM leitura_sensor l 
         LEFT JOIN trens t ON l.fk_id_trem = t.id_trem";
 
@@ -105,6 +111,7 @@ if (!empty($termo_busca)) {
     $leituras = $conexao->query($sql);
 }
 
+// --- BUSCA DE REGISTRO PARA EDIÇÃO ---
 $leitura_edicao = null;
 if (isset($_GET['editar'])) {
     $id_editar = intval($_GET['editar']);
@@ -131,7 +138,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
         <div class="nav-left">
             <div class="logo-container">
                 <a href="../admin.php">
-                    <img src="../../images/GTT-logo.png" alt="Logo" class="nav-logo">
+                    <img src="../../images/GTT-logo.png" alt="Logo" class="nav-logo" onerror="this.style.display='none'">
                 </a>
             </div>
             <ul class="nav-links">
@@ -140,7 +147,8 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
             </ul>
         </div>
         <div class="nav-right">
-            <a href="../../dashboard/Barra/usuario/usuario.php" class="user-btn">
+            <!-- Link corrigido para o perfil do admin -->
+            <a href="../admin_usuario.php" class="user-btn">
                 <span><?php echo htmlspecialchars($primeiro_nome); ?></span>
                 <svg class="user-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </a>
@@ -158,6 +166,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
             </div>
         <?php endif; ?>
 
+        <!-- Formulário de Cadastro / Edição -->
         <section class="form-section">
             <h2><?php echo $leitura_edicao ? 'Editar Leitura de Sensor' : 'Registrar Nova Leitura'; ?></h2>
             <form method="POST" action="gestao_sensor.php" class="form-sensor">
@@ -217,6 +226,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
             </form>
         </section>
 
+        <!-- Formulário de Busca -->
         <section class="search-section">
             <form method="GET" action="gestao_sensor.php" class="search-form">
                 <input type="text" name="busca" placeholder="Buscar por prefixo do trem, modelo ou ID..." value="<?php echo htmlspecialchars($termo_busca); ?>">
@@ -227,6 +237,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
             </form>
         </section>
 
+        <!-- Listagem com Indicador Calculado -->
         <section class="table-section">
             <table class="data-table">
                 <thead>
@@ -238,7 +249,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                         <th>Temp. Motor</th>
                         <th>Consumo</th>
                         <th>Vibração</th>
-                        <th>Última Leitura (Calculada)</th>
+                        <th>Status do Alerta (Calculado)</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -251,18 +262,21 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                                 <td><?php echo date('d/m/Y H:i', strtotime($row['data_hora'])); ?></td>
                                 <td><?php echo number_format($row['velocidade_kmh'], 2, ',', '.'); ?> km/h</td>
                                 <td>
-                                    <span class="temp-badge <?php echo ($row['temperatura_motor_c'] > 90) ? 'temp-alta' : 'temp-normal'; ?>">
+                                    <span class="temp-badge <?php echo ($row['temperatura_motor_c'] > 90) ? 'temp-alta' : 'temp-normal'; ?>" style="white-space: nowrap;">
                                         <?php echo number_format($row['temperatura_motor_c'], 1, ',', '.'); ?> °C
                                     </span>
                                 </td>
                                 <td><?php echo number_format($row['consumo_litros_hora'], 2, ',', '.'); ?> L/h</td>
                                 <td><?php echo number_format($row['vibracao_mm_s'], 2, ',', '.'); ?> mm/s</td>
                                 
+                                <!-- Indicador do Alerta Calculado -->
                                 <td>
-                                    <?php if ($row['ultima_leitura_valor'] !== null): ?>
-                                        <strong><?php echo number_format($row['ultima_leitura_valor'], 2, ',', '.'); ?> <?php echo htmlspecialchars($row['ultima_leitura_unidade']); ?></strong>
+                                    <?php if (!empty($row['ultimo_alerta_msg'])): ?>
+                                        <span class="status-badge status-<?php echo htmlspecialchars($row['ultimo_alerta_sev']); ?>">
+                                            <?php echo ucfirst($row['ultimo_alerta_sev']); ?>
+                                        </span>
                                     <?php else: ?>
-                                        <span style="color: #aaa; font-style: italic;">Sem leitura registrada</span>
+                                        <span style="color: #aaa; font-style: italic;">Normal</span>
                                     <?php endif; ?>
                                 </td>
 
