@@ -107,6 +107,16 @@ $primeiro_nome = $partes_nome[0];
                 <p>Gerenciamento de contas, perfis e permissões dos usuários.</p>
             </a>
 
+            <a href="admin_rota/gestao_rota.php" class="control-card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                </div>
+                <h2>Gestão de Rotas</h2>
+                <p>Listar, filtrar por status/data/trem, cadastrar, editar e excluir viagens.</p>
+            </a>
+
         </section>
 
     </main>

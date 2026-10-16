@@ -10,7 +10,6 @@ if (!isset($_SESSION['id_usuario']) || ($_SESSION['papel'] ?? '') !== 'administr
 $mensagem = "";
 $tipo_mensagem = "";
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
     $id_leitura           = !empty($_POST['id_leitura']) ? intval($_POST['id_leitura']) : null;
     $fk_id_trem           = intval($_POST['fk_id_trem'] ?? 0);
@@ -64,7 +63,6 @@ if (isset($_GET['excluir'])) {
     }
 }
 
-
 if (isset($_GET['msg'])) {
     if ($_GET['msg'] === 'criado') {
         $mensagem = "Nova leitura do sensor registrada com sucesso!";
@@ -78,27 +76,33 @@ if (isset($_GET['msg'])) {
     }
 }
 
-
 $lista_trens = $conexao->query("SELECT id_trem, prefixo_trem, modelo_trem FROM trens ORDER BY prefixo_trem ASC");
 
-
 $termo_busca = trim($_GET['busca'] ?? '');
+
+$sql = "SELECT l.*, t.prefixo_trem, t.modelo_trem,
+        (SELECT lei.valor 
+         FROM leituras lei 
+         WHERE lei.fk_id_trem = l.fk_id_trem 
+         ORDER BY lei.data_hora DESC LIMIT 1) AS ultima_leitura_valor,
+        (SELECT lei.unidade 
+         FROM leituras lei 
+         WHERE lei.fk_id_trem = l.fk_id_trem 
+         ORDER BY lei.data_hora DESC LIMIT 1) AS ultima_leitura_unidade
+        FROM leitura_sensor l 
+        LEFT JOIN trens t ON l.fk_id_trem = t.id_trem";
+
 if (!empty($termo_busca)) {
-    $stmt = $conexao->prepare("SELECT l.*, t.prefixo_trem, t.modelo_trem 
-                               FROM leitura_sensor l 
-                               INNER JOIN trens t ON l.fk_id_trem = t.id_trem 
-                               WHERE t.prefixo_trem LIKE ? OR t.modelo_trem LIKE ? OR l.id_leitura = ?
-                               ORDER BY l.data_hora DESC");
+    $sql .= " WHERE t.prefixo_trem LIKE ? OR t.modelo_trem LIKE ? OR l.id_leitura = ? ORDER BY l.data_hora DESC";
+    $stmt = $conexao->prepare($sql);
     $param_like = "%{$termo_busca}%";
     $param_id = intval($termo_busca);
     $stmt->bind_param("ssi", $param_like, $param_like, $param_id);
     $stmt->execute();
     $leituras = $stmt->get_result(); 
 } else {
-    $leituras = $conexao->query("SELECT l.*, t.prefixo_trem, t.modelo_trem 
-                                 FROM leitura_sensor l 
-                                 INNER JOIN trens t ON l.fk_id_trem = t.id_trem 
-                                 ORDER BY l.data_hora DESC");
+    $sql .= " ORDER BY l.data_hora DESC";
+    $leituras = $conexao->query($sql);
 }
 
 $leitura_edicao = null;
@@ -234,6 +238,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                         <th>Temp. Motor</th>
                         <th>Consumo</th>
                         <th>Vibração</th>
+                        <th>Última Leitura (Calculada)</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -242,7 +247,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                         <?php while ($row = $leituras->fetch_assoc()): ?>
                             <tr>
                                 <td>#<?php echo $row['id_leitura']; ?></td>
-                                <td><strong><?php echo htmlspecialchars($row['prefixo_trem']); ?></strong> <small>(<?php echo htmlspecialchars($row['modelo_trem']); ?>)</small></td>
+                                <td><strong><?php echo htmlspecialchars($row['prefixo_trem'] ?? 'Sem Trem'); ?></strong> <small>(<?php echo htmlspecialchars($row['modelo_trem'] ?? '-'); ?>)</small></td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($row['data_hora'])); ?></td>
                                 <td><?php echo number_format($row['velocidade_kmh'], 2, ',', '.'); ?> km/h</td>
                                 <td>
@@ -252,6 +257,15 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                                 </td>
                                 <td><?php echo number_format($row['consumo_litros_hora'], 2, ',', '.'); ?> L/h</td>
                                 <td><?php echo number_format($row['vibracao_mm_s'], 2, ',', '.'); ?> mm/s</td>
+                                
+                                <td>
+                                    <?php if ($row['ultima_leitura_valor'] !== null): ?>
+                                        <strong><?php echo number_format($row['ultima_leitura_valor'], 2, ',', '.'); ?> <?php echo htmlspecialchars($row['ultima_leitura_unidade']); ?></strong>
+                                    <?php else: ?>
+                                        <span style="color: #aaa; font-style: italic;">Sem leitura registrada</span>
+                                    <?php endif; ?>
+                                </td>
+
                                 <td class="actions-cell">
                                     <a href="gestao_sensor.php?editar=<?php echo $row['id_leitura']; ?>" class="btn-edit">Editar</a>
                                     <a href="gestao_sensor.php?excluir=<?php echo $row['id_leitura']; ?>" class="btn-delete" onclick="return confirm('Deseja realmente excluir esta leitura?');">Excluir</a>
@@ -260,7 +274,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="empty-table">Nenhuma leitura de sensor encontrada.</td>
+                            <td colspan="9" class="empty-table">Nenhuma leitura de sensor encontrada.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
