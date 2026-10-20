@@ -26,13 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['login']      = $usuario['login'];
                 $_SESSION['papel']      = $usuario['papel'];
 
-                // Redireciona de acordo com o papel do usuário
                 if ($usuario['papel'] === 'administrador') {
                     header("Location: ../admin/admin.php");
                 } elseif ($usuario['papel'] === 'maquinista') {
-                    header("Location: ../relatorio/relatorio.php");
+                    header("Location: ../relatorio/gera_relatorio.php");
                 } else {
-                    // Cliente / Gestor ou qualquer outro papel
                     header("Location: ../dashboard/dashboard.php");
                 }
                 exit;

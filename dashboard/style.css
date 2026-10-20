@@ -5,26 +5,13 @@
     font-family: Arial, sans-serif;
 }
 
-@view-transition {
-    navigation: auto;
-}
-
-@keyframes fadeInPage {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 body {
     background-color: #1c1c1c; 
     color: #ffffff;
     min-height: 100vh;
-    animation: fadeInPage 0.3s ease-in-out;
 }
 
+/* NAVBAR STICKY */
 .sticky-bar {
     position: sticky;
     top: 0;
@@ -34,7 +21,6 @@ body {
     justify-content: space-between; 
     align-items: center;
     height: 60px; 
-    padding: 0;
     width: 100%;
 }
 
@@ -72,13 +58,12 @@ body {
     padding: 0 35px;
     border-right: 1px solid #917519;
     height: 100%;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .nav-item a {
     text-decoration: none;
     color: #ffffff; 
-    font-size: 22px; 
+    font-size: 20px; 
 }
 
 .nav-item.active {
@@ -89,16 +74,10 @@ body {
     color: #dfd29d; 
 }
 
-.tab-viajar {
-    border-top-right-radius: 35px;
-    border-right: none;
-}
-
 .nav-right {
     display: flex;
     align-items: center;
     height: 100%;
-    padding-right: 0; 
 }
 
 .user-btn {
@@ -107,45 +86,47 @@ body {
     gap: 10px;
     text-decoration: none;
     color: #ffffff;
-    font-size: 22px;
+    font-size: 20px;
     height: 100%;      
     padding: 0 25px;      
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.user-btn:hover {
-    color: #dfd29d;
-}
-
-.user-btn.active-user {
-    background-color: #917519;
-    color: #dfd29d;
-}
-
-.user-btn.active-user .user-icon {
-    fill: #dfd29d;
 }
 
 .user-icon {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     fill: #000000;
 }
 
+/* CONTEÚDO PRINCIPAL */
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 30px 20px;
 }
 
+.welcome-title {
+    color: #dfd29d;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    color: #dfd29d;
+    font-size: 22px;
+    margin: 30px 0 15px 0;
+}
+
+/* CARTÕES DE ESTATÍSTICA / INDICADORES */
 .stats-container {
     background-color: #cca424; 
     border-radius: 15px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 25px 10px;
-    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    color: #000000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .info-card {
@@ -153,25 +134,90 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    flex: 1;
-}
-
-.info-card:not(:last-child) {
-    border-right: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .stat-number {
-    font-size: 46px;
+    font-size: 40px;
     font-weight: bold;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 5px;
 }
 
-.stat-label {
-    font-size: 20px;
-    color: #ffffff;
+.stat-number.text-alert {
+    color: #c62828;
 }
 
+.stat-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.no-data {
+    font-size: 20px;
+    color: #555555;
+    font-style: italic;
+}
+
+/* SEÇÃO DO GRÁFICO CSS */
+.chart-section {
+    background-color: #2a2a2a;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.chart-section h2 {
+    color: #dfd29d;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.css-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chart-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chart-label {
+    width: 180px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.chart-bar-bg {
+    flex: 1;
+    height: 22px;
+    background-color: #444444;
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+.chart-bar-fill {
+    height: 100%;
+    background-color: #cca424;
+    border-radius: 11px;
+    transition: width 0.4s ease;
+}
+
+.chart-pct {
+    width: 50px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.no-data-msg {
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+/* PACOTES DE VIAGEM */
 .packages-container {
     display: flex;
     justify-content: space-between;
@@ -180,7 +226,7 @@ body {
 
 .pacote-card {
     flex: 1;
-    height: 340px;
+    height: 300px;
     border-radius: 15px;
     text-decoration: none; 
     color: #ffffff;
@@ -203,13 +249,14 @@ body {
     left: 0;
     width: 100%;
     padding: 25px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
     display: flex;
     flex-direction: column;
 }
 
-.pacote-content h2, p {
-    font-size: 24px;
-    font-weight: normal;
+.pacote-content h2 {
+    font-size: 22px;
+    font-weight: bold;
     margin-bottom: 4px;
 }
 
@@ -228,7 +275,7 @@ body {
 
 .preco {
     font-size: 20px;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 .tag-oferta {
@@ -236,5 +283,6 @@ body {
     bottom: 25px;
     right: 25px;
     color: #ff6b6b; 
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
 }
