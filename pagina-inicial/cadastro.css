@@ -15,6 +15,8 @@ body {
     background-color: black;
     background-size: cover;
     background-position: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 .logo-container {
@@ -45,7 +47,27 @@ body {
     height: auto;
 }
 
-input {
+.slogan {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+    -webkit-text-fill-color: goldenrod;
+}
+
+input, select {
     width: 280px;
     height: 40px;
     border: 2px solid rgba(102, 96, 61, 1);
@@ -53,35 +75,88 @@ input {
     color: goldenrod;
     font-size: 16px;
     padding: 10px;
-    margin: 10px 0;
     outline: none;
+    border-radius: 6px;
+    text-align: center;
+    transition: all 0.2s ease;
+    caret-color: #ffffff; /* Cursor pisca-pisca em branco */
 }
 
-.input-group {
-    -webkit-text-fill-color: goldenrod;
+/* Estilização das opções do Select */
+select option {
+    background-color: rgb(51, 49, 41);
+    color: goldenrod;
+}
+
+/* Transição do Placeholder */
+input::placeholder {
+    color: goldenrod;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+/* Hover nos campos */
+.input-group input:hover, 
+.input-group select:hover {
+    background-color: rgb(70, 66, 45);
+    border: 2px solid rgb(124, 118, 81);
+    -webkit-text-fill-color: rgb(224, 182, 75);
+    transform: scale(1.02);
+}
+
+/* Efeito ao Clicar/Focar no campo (Placeholder some e destaca o campo) */
+input:focus::placeholder {
+    opacity: 0;
+}
+
+.input-group input:focus, 
+.input-group select:focus {
+    background-color: rgb(87, 84, 74);
+    border: 2px solid #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    transform: scale(1.02);
+    outline: none;
 }
 
 .botoes-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin-top: 10px;
+    width: 100%;
 }
 
-.botoes-container button,
-.botoes-container a {
+#btn-confirmar {
+    width: 250px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: goldenrod;
+    background-color: rgba(51, 49, 41, 1);
+    border: 2px solid rgba(102, 96, 61, 1);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+#btn-confirmar:hover {
+    transform: scale(1.04);
+    background-color: rgb(87, 84, 74);
+    color: rgb(231, 183, 61);
+    border: 2px solid rgb(124, 118, 81);
+}
+
+#btn-voltar {
     color: goldenrod;
     text-decoration: none;
     font-size: 14px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.botoes-container button {
-    background-color: rgba(102, 96, 61, 1);
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-weight: bold;
+#btn-voltar:hover {
+    color: rgb(231, 183, 61);
+    text-decoration: underline;
 }

@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cadastroForm = document.getElementById('loginform');
 
     if (cadastroForm) {
+        cadastroForm.reset();
+
         cadastroForm.addEventListener('submit', function (e) {
             const nome = document.getElementById('nome').value.trim();
             const login = document.getElementById('login').value.trim();

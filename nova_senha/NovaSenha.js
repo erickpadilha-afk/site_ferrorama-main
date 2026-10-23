@@ -1,21 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('novaSenhaForm');
+    // Validação do formulário da Etapa 1 (E-mail)
+    const formEtapa1 = document.getElementById('formEtapa1');
+    if (formEtapa1) {
+        formEtapa1.addEventListener('submit', function (e) {
+            const emailInput = document.getElementById('email').value.trim();
+            if (emailInput === "") {
+                e.preventDefault();
+                alert("Por favor, digite seu e-mail cadastrado.");
+            }
+        });
+    }
 
-    if (form) {
-        form.addEventListener('submit', function (e) {
-            const login = document.getElementById('login').value.trim();
+    // Validação do formulário da Etapa 2 (Código + Novas Senhas)
+    const formEtapa2 = document.getElementById('formEtapa2');
+    if (formEtapa2) {
+        formEtapa2.addEventListener('submit', function (e) {
+            const codigo = document.getElementById('codigo').value.trim();
             const novaSenha = document.getElementById('nova_senha').value.trim();
-            const confSenha = document.getElementById('conf_senha').value.trim();
+            const confSenha = document.getElementById('confirma_senha').value.trim();
 
-            if (login === "" || novaSenha === "" || confSenha === "") {
+            if (codigo === "" || novaSenha === "" || confSenha === "") {
                 e.preventDefault();
                 alert("Por favor, preencha todos os campos.");
                 return;
             }
 
+            if (codigo.length !== 6) {
+                e.preventDefault();
+                alert("O código deve ter exatamente 6 dígitos.");
+                return;
+            }
+
             if (novaSenha !== confSenha) {
                 e.preventDefault();
-                alert("As senhas digitadas não coincidem!");
+                alert("A nova senha e a confirmação não coincidem!");
             }
         });
     }

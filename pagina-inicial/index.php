@@ -15,14 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = trim($_POST['senha'] ?? '');
 
     if (!empty($login) && !empty($senha)) {
-        $stmt = $conexao->prepare("SELECT id, login, senha, papel FROM usuario WHERE login = ?");
+        $stmt = $conexao->prepare("SELECT id, nome, login, senha, papel, COALESCE(ativo, 1) AS ativo FROM usuario WHERE login = ?");
         $stmt->bind_param("s", $login);
         $stmt->execute();
         $resultado = $stmt->get_result();
 
         if ($usuario = $resultado->fetch_assoc()) {
-            if (password_verify($senha, $usuario['senha'])) {
+            if ((int)$usuario['ativo'] === 0) {
+                $erro = "Sua conta está desativada. Entre em contato com o administrador.";
+            } elseif (password_verify($senha, $usuario['senha'])) {
                 $_SESSION['id_usuario'] = $usuario['id'];
+                $_SESSION['nome']       = $usuario['nome'];
                 $_SESSION['login']      = $usuario['login'];
                 $_SESSION['papel']      = $usuario['papel'];
 
@@ -34,9 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header("Location: ../dashboard/dashboard.php");
                 }
                 exit;
+            } else {
+                $erro = "Utilizador ou senha incorretos!";
             }
+        } else {
+            $erro = "Utilizador ou senha incorretos!";
         }
-        $erro = "Utilizador ou senha incorretos!";
     } else {
         $erro = "Preencha todos os campos!";
     }
@@ -48,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - GTT</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- O parâmetro ?v=3 força a atualização limpa do CSS sem cache -->
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <div class="logo-container">
@@ -65,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
         <?php endif; ?>
 
-        <form id="loginform" class="login-form" method="POST">
+        <form id="loginform" class="login-form" method="POST" autocomplete="off">
             <div class="input-group">
-                <input type="text" id="email" name="login" placeholder="E-mail" required>
+                <input type="email" id="email" name="login" placeholder="E-mail" required autocomplete="off" onfocus="this.placeholder=''" onblur="this.placeholder='E-mail'">
             </div>
             <div class="input-group">
-                <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                <input type="password" id="senha" name="senha" placeholder="Senha" required autocomplete="new-password" onfocus="this.placeholder=''" onblur="this.placeholder='Senha'">
             </div>
             
             <div class="botoes-container">

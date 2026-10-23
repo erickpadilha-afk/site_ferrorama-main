@@ -49,14 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário - GTT</title>
-    <link rel="stylesheet" href="cadastro.css">
+    <!-- Versão no CSS para evitar cache do navegador -->
+    <link rel="stylesheet" href="cadastro.css?v=3">
 </head>
 <body>
     <div class="logo-container">
         <div class="circle"></div>
         <img src="../images/GTT-logo.png" alt="Logo GTT" class="logo">
     </div>
-    <h3 class="slogan" style="color: gold;">Cadastrar Novo Usuário</h3>
+    <h3 class="slogan" style="color: goldenrod;">Cadastrar Novo Usuário</h3>
     
     <div class="login-box">
         <?php if (!empty($mensagem)): ?>
@@ -71,31 +72,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </p>
         <?php endif; ?>
 
-        <form id="loginform" class="login-form" method="POST">
+        <form id="loginform" class="login-form" method="POST" autocomplete="off">
             <div class="input-group">
-                <input type="text" id="nome" name="nome" placeholder="Nome Completo" required>
+                <input type="text" id="nome" name="nome" placeholder="Nome Completo" required autocomplete="off" onfocus="this.placeholder=''" onblur="this.placeholder='Nome Completo'">
             </div>
             
             <div class="input-group">
-                <input type="text" id="login" name="login" placeholder="Gmail" required>
+                <input type="email" id="login" name="login" placeholder="Gmail" required autocomplete="off" onfocus="this.placeholder=''" onblur="this.placeholder='Gmail'">
             </div>
             
             <div class="input-group">
-                <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                <input type="password" id="senha" name="senha" placeholder="Senha" required autocomplete="new-password" onfocus="this.placeholder=''" onblur="this.placeholder='Senha'">
             </div>
             
             <div class="input-group">
-                <select name="papel" id="papel" required style="width: 100%; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <select name="papel" id="papel" required>
                     <option value="" disabled selected>Selecione o Papel do Usuário</option>
                     <option value="administrador">Administrador</option>
                     <option value="maquinista">Maquinista</option>
-                    <option value="gestor">Cliente</option>
+                    <option value="cliente">Cliente</option>
                 </select>
             </div>
 
-            <div class="botoes-container" style="display: flex; gap: 10px; justify-content: space-between;">
-                <a href="../pagina-inicial/index.php" style="color: #ccc; text-decoration: none; align-self: center;">Voltar</a>
+            <div class="botoes-container">
                 <button type="submit" id="btn-confirmar">Cadastrar</button>
+                <a href="../pagina-inicial/index.php" id="btn-voltar">&larr; Voltar ao Login</a>
             </div>
         </form>
     </div>

@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../config/conexao.php';
 
-// Bloqueio de acesso para usuários não autenticados ou não administradores
+// Bloqueio de acesso no backend para não-administradores
 if (!isset($_SESSION['id_usuario']) || ($_SESSION['papel'] ?? '') !== 'administrador') {
     header("Location: ../../pagina-inicial/index.php");
     exit;
@@ -11,7 +11,17 @@ if (!isset($_SESSION['id_usuario']) || ($_SESSION['papel'] ?? '') !== 'administr
 $mensagem = "";
 $tipo_mensagem = "";
 
-// --- PROCESSAR EDIÇÃO DE USUÁRIO / CLIENTE ---
+// Check/Garantia da coluna 'ativo' na tabela usuario
+if (isset($conexao) && $conexao) {
+    try {
+        $conexao->query("SELECT ativo FROM usuario LIMIT 1");
+    } catch (mysqli_sql_exception $e) {
+        // Se a coluna não existir, cria automaticamente
+        @$conexao->query("ALTER TABLE usuario ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1");
+    }
+}
+
+// --- PROCESSAR EDIÇÃO / CADASTRO DE USUÁRIO ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
     $id_usuario_form = !empty($_POST['id_usuario']) ? intval($_POST['id_usuario']) : null;
     $nome            = trim($_POST['nome'] ?? '');
@@ -24,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
         $tipo_mensagem = "erro";
     } else {
         if ($id_usuario_form) {
-            // Atualização de usuário existente
+            // TRAVA 3: Alteração de perfil verificada e processada no servidor
             if (!empty($senha)) {
                 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
                 $stmt = $conexao->prepare("UPDATE usuario SET nome = ?, login = ?, papel = ?, senha = ? WHERE id = ?");
@@ -42,13 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
                 $tipo_mensagem = "erro";
             }
         } else {
-            // Inserção de novo usuário
+            // Cadastro de novo usuário
             if (empty($senha)) {
                 $mensagem = "Informe uma senha para cadastrar o novo usuário!";
                 $tipo_mensagem = "erro";
             } else {
                 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-                $stmt = $conexao->prepare("INSERT INTO usuario (nome, login, papel, senha) VALUES (?, ?, ?, ?)");
+                $stmt = $conexao->prepare("INSERT INTO usuario (nome, login, papel, senha, ativo) VALUES (?, ?, ?, ?, 1)");
                 $stmt->bind_param("ssss", $nome, $login, $papel, $senha_hash);
 
                 if ($stmt->execute()) {
@@ -63,46 +73,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_salvar'])) {
     }
 }
 
-// --- PROCESSAR EXCLUSÃO ---
-if (isset($_GET['excluir'])) {
-    $id_excluir = intval($_GET['excluir']);
+// --- PROCESSAR DESATIVAÇÃO (SOFT DELETE EM VEZ DE DELETE FÍSICO) ---
+if (isset($_GET['desativar'])) {
+    $id_desativar = intval($_GET['desativar']);
+    $id_logado    = intval($_SESSION['id_usuario']);
 
-    // Prevenir que o admin logado exclua a si mesmo
-    if ($id_excluir === intval($_SESSION['id_usuario'])) {
-        $mensagem = "Você não pode excluir a sua própria conta enquanto estiver conectado!";
+    // TRAVA 1: O usuário não pode desativar a própria conta
+    if ($id_desativar === $id_logado) {
+        $mensagem = "Ação negada: Você não pode desativar a sua própria conta!";
         $tipo_mensagem = "erro";
     } else {
-        $stmt = $conexao->prepare("DELETE FROM usuario WHERE id = ?");
-        $stmt->bind_param("i", $id_excluir);
+        // TRAVA 2: Verificar se é o último administrador ativo
+        $res_admin = $conexao->query("SELECT COUNT(*) AS total_admins FROM usuario WHERE papel = 'administrador' AND (ativo = 1 OR ativo IS NULL)");
+        $qtd_admins = 0;
+        if ($res_admin && $r_adm = $res_admin->fetch_assoc()) {
+            $qtd_admins = intval($r_adm['total_admins']);
+        }
 
-        if ($stmt->execute()) {
-            header("Location: gestao_cliente.php?msg=excluido");
-            exit;
-        } else {
-            $mensagem = "Erro ao excluir o usuário selecionado.";
+        // Checar papel do usuário alvo
+        $stmt_chk = $conexao->prepare("SELECT papel FROM usuario WHERE id = ?");
+        $stmt_chk->bind_param("i", $id_desativar);
+        $stmt_chk->execute();
+        $user_alvo = $stmt_chk->get_result()->fetch_assoc();
+
+        if ($user_alvo && $user_alvo['papel'] === 'administrador' && $qtd_admins <= 1) {
+            $mensagem = "Ação negada: Não é possível desativar o único administrador ativo do sistema!";
             $tipo_mensagem = "erro";
+        } else {
+            // Executa a DESATIVAÇÃO
+            try {
+                $stmt = $conexao->prepare("UPDATE usuario SET ativo = 0 WHERE id = ?");
+                $stmt->bind_param("i", $id_desativar);
+                $stmt->execute();
+                header("Location: gestao_cliente.php?msg=desativado");
+                exit;
+            } catch (Exception $e) {
+                $mensagem = "Erro ao desativar o usuário no banco de dados.";
+                $tipo_mensagem = "erro";
+            }
         }
     }
 }
 
-// Feedback visual
+// --- PROCESSAR REATIVAÇÃO ---
+if (isset($_GET['reativar'])) {
+    $id_reativar = intval($_GET['reativar']);
+    $stmt = $conexao->prepare("UPDATE usuario SET ativo = 1 WHERE id = ?");
+    $stmt->bind_param("i", $id_reativar);
+    if ($stmt->execute()) {
+        header("Location: gestao_cliente.php?msg=reativado");
+        exit;
+    }
+}
+
+// Feedbacks visuais
 if (isset($_GET['msg'])) {
     if ($_GET['msg'] === 'criado') { $mensagem = "Usuário cadastrado com sucesso!"; $tipo_mensagem = "sucesso"; }
     elseif ($_GET['msg'] === 'atualizado') { $mensagem = "Usuário atualizado com sucesso!"; $tipo_mensagem = "sucesso"; }
-    elseif ($_GET['msg'] === 'excluido') { $mensagem = "Usuário excluído com sucesso!"; $tipo_mensagem = "sucesso"; }
+    elseif ($_GET['msg'] === 'desativado') { $mensagem = "Usuário desativado com sucesso!"; $tipo_mensagem = "sucesso"; }
+    elseif ($_GET['msg'] === 'reativado') { $mensagem = "Usuário reativado com sucesso!"; $tipo_mensagem = "sucesso"; }
 }
 
 // --- CONSULTA E BUSCA DE USUÁRIOS ---
 $termo_busca = trim($_GET['busca'] ?? '');
 
-if (!empty($termo_busca)) {
-    $stmt = $conexao->prepare("SELECT id, nome, login, papel FROM usuario WHERE nome LIKE ? OR login LIKE ? ORDER BY id DESC");
-    $param_like = "%{$termo_busca}%";
-    $stmt->bind_param("ss", $param_like, $param_like);
-    $stmt->execute();
-    $usuarios = $stmt->get_result();
-} else {
-    $usuarios = $conexao->query("SELECT id, nome, login, papel FROM usuario ORDER BY id DESC");
+try {
+    if (!empty($termo_busca)) {
+        $stmt = $conexao->prepare("SELECT id, nome, login, papel, COALESCE(ativo, 1) AS ativo FROM usuario WHERE nome LIKE ? OR login LIKE ? ORDER BY id DESC");
+        $param_like = "%{$termo_busca}%";
+        $stmt->bind_param("ss", $param_like, $param_like);
+        $stmt->execute();
+        $usuarios = $stmt->get_result();
+    } else {
+        $usuarios = $conexao->query("SELECT id, nome, login, papel, COALESCE(ativo, 1) AS ativo FROM usuario ORDER BY id DESC");
+    }
+} catch (mysqli_sql_exception $e) {
+    // Fallback caso a tabela ainda não tenha sido alterada
+    if (!empty($termo_busca)) {
+        $stmt = $conexao->prepare("SELECT id, nome, login, papel, 1 AS ativo FROM usuario WHERE nome LIKE ? OR login LIKE ? ORDER BY id DESC");
+        $param_like = "%{$termo_busca}%";
+        $stmt->bind_param("ss", $param_like, $param_like);
+        $stmt->execute();
+        $usuarios = $stmt->get_result();
+    } else {
+        $usuarios = $conexao->query("SELECT id, nome, login, papel, 1 AS ativo FROM usuario ORDER BY id DESC");
+    }
 }
 
 // Dados para edição
@@ -176,6 +231,7 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                     <label>Perfil de Acesso *</label>
                     <select name="papel" required>
                         <option value="cliente" <?php echo (($usuario_edicao['papel'] ?? '') === 'cliente') ? 'selected' : ''; ?>>Cliente / Passageiro</option>
+                        <option value="maquinista" <?php echo (($usuario_edicao['papel'] ?? '') === 'maquinista') ? 'selected' : ''; ?>>Maquinista</option>
                         <option value="administrador" <?php echo (($usuario_edicao['papel'] ?? '') === 'administrador') ? 'selected' : ''; ?>>Administrador</option>
                     </select>
                 </div>
@@ -216,13 +272,14 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                         <th>Nome Completo</th>
                         <th>Login</th>
                         <th>Perfil</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($usuarios && $usuarios->num_rows > 0): ?>
                         <?php while ($row = $usuarios->fetch_assoc()): ?>
-                            <tr>
+                            <tr class="<?php echo ($row['ativo'] == 0) ? 'row-inativa' : ''; ?>">
                                 <td>#<?php echo $row['id']; ?></td>
                                 <td><strong><?php echo htmlspecialchars($row['nome']); ?></strong></td>
                                 <td><?php echo htmlspecialchars($row['login']); ?></td>
@@ -231,18 +288,30 @@ $primeiro_nome = explode(' ', trim($nome_completo))[0];
                                         <?php echo ucfirst($row['papel']); ?>
                                     </span>
                                 </td>
+                                <td>
+                                    <?php if ($row['ativo'] == 1): ?>
+                                        <span class="status-tag status-ativo">Ativo</span>
+                                    <?php else: ?>
+                                        <span class="status-tag status-inativo">Inativo</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="actions-cell">
                                     <a href="gestao_cliente.php?editar=<?php echo $row['id']; ?>" class="btn-edit">Editar</a>
-                                    <?php if ($row['id'] !== intval($_SESSION['id_usuario'])): ?>
-                                        <a href="gestao_cliente.php?excluir=<?php echo $row['id']; ?>" class="btn-delete" onclick="return confirm('Deseja realmente excluir este usuário?');">Excluir</a>
-                                    <?php else: ?>
+                                    
+                                    <?php if ($row['id'] === intval($_SESSION['id_usuario'])): ?>
                                         <span class="own-user-tag">(Sua Conta)</span>
+                                    <?php else: ?>
+                                        <?php if ($row['ativo'] == 1): ?>
+                                            <a href="gestao_cliente.php?desativar=<?php echo $row['id']; ?>" class="btn-delete" onclick="return confirm('Deseja realmente desativar este usuário?');">Desativar</a>
+                                        <?php else: ?>
+                                            <a href="gestao_cliente.php?reativar=<?php echo $row['id']; ?>" class="btn-reactivate">Reativar</a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr><td colspan="5" class="empty-table">Nenhum usuário encontrado.</td></tr>
+                        <tr><td colspan="6" class="empty-table">Nenhum usuário encontrado.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>

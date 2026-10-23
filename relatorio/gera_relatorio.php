@@ -2,15 +2,12 @@
 session_start();
 require_once __DIR__ . '/../config/conexao.php';
 
-
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../pagina-inicial/index.php");
     exit;
 }
 
-
 $id_usuario = $_SESSION['id_usuario'];
-
 
 // Buscar o nome real e o papel do usuário
 $nome_exibicao = 'Usuário';
@@ -35,10 +32,9 @@ $primeiro_nome = explode(' ', trim($nome_exibicao))[0];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerar Relatórios - GTT</title>
-    <link rel="stylesheet" href="gera_relatorio_style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 
     <nav class="sticky-bar">
         <div class="nav-left">
@@ -49,11 +45,10 @@ $primeiro_nome = explode(' ', trim($nome_exibicao))[0];
             </div>
             
             <ul class="nav-links">
-                <li class="nav-item"><a href="../dashboard/dashboard.php">Início</a></li>
                 <li class="nav-item active"><a href="gera_relatorio.php">Relatórios</a></li>
+                <li class="nav-item tab-viajar"><a href="viagens.php">Viagens</a></li>
             </ul>
         </div>
-
 
         <div class="nav-right">
             <a href="../dashboard/Barra/usuario/usuario.php" class="user-btn">
@@ -63,10 +58,8 @@ $primeiro_nome = explode(' ', trim($nome_exibicao))[0];
         </div>
     </nav>
 
-
     <main class="main-content">
         <h1 class="page-title">Emissão de Relatórios Operacionais</h1>
-
 
         <section class="form-section">
             <form method="GET" action="visualiza_relatorio.php" class="relatorio-form">
@@ -81,13 +74,11 @@ $primeiro_nome = explode(' ', trim($nome_exibicao))[0];
                     </select>
                 </div>
 
-
                 <div class="form-grid-dates">
                     <div class="form-group">
                         <label for="data_inicio">Data Inicial *</label>
                         <input type="date" name="data_inicio" id="data_inicio" required value="<?php echo date('Y-m-01'); ?>">
                     </div>
-
 
                     <div class="form-group">
                         <label for="data_fim">Data Final *</label>
@@ -95,14 +86,12 @@ $primeiro_nome = explode(' ', trim($nome_exibicao))[0];
                     </div>
                 </div>
 
-
                 <div class="form-actions">
                     <button type="submit" class="btn-submit">Gerar Relatório</button>
                 </div>
             </form>
         </section>
     </main>
-
 
 </body>
 </html>
