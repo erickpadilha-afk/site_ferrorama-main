@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Validação do formulário da Etapa 1 (E-mail)
+    // Reset dos formulários para garantir que entrem limpos
     const formEtapa1 = document.getElementById('formEtapa1');
     if (formEtapa1) {
+        formEtapa1.reset();
         formEtapa1.addEventListener('submit', function (e) {
             const emailInput = document.getElementById('email').value.trim();
             if (emailInput === "") {
@@ -11,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Validação do formulário da Etapa 2 (Código + Novas Senhas)
     const formEtapa2 = document.getElementById('formEtapa2');
     if (formEtapa2) {
+        formEtapa2.reset();
         formEtapa2.addEventListener('submit', function (e) {
             const codigo = document.getElementById('codigo').value.trim();
             const novaSenha = document.getElementById('nova_senha').value.trim();

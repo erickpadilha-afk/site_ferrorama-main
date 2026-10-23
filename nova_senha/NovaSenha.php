@@ -83,7 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_redefinir_senha'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar Senha - GTT</title>
-    <link rel="stylesheet" href="NovaSenha.css?v=2">
+    <!-- Versão do CSS alterada para v=3 para evitar cache -->
+    <link rel="stylesheet" href="NovaSenha.css?v=3">
 </head>
 <body>
 
@@ -104,9 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_redefinir_senha'
 
         <?php if ($etapa === 1): ?>
             <!-- ETAPA 1 -->
-            <form id="formEtapa1" method="POST" action="NovaSenha.php" class="login-form">
+            <form id="formEtapa1" method="POST" action="NovaSenha.php" class="login-form" autocomplete="off">
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Digite seu E-mail" required>
+                    <input type="email" id="email" name="email" placeholder="Digite seu E-mail" required autocomplete="off" onfocus="this.placeholder=''" onblur="this.placeholder='Digite seu E-mail'">
                 </div>
 
                 <div class="botoes-container">
@@ -117,19 +118,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_redefinir_senha'
 
         <?php else: ?>
             <!-- ETAPA 2 -->
-            <form id="formEtapa2" method="POST" action="NovaSenha.php" class="login-form">
+            <form id="formEtapa2" method="POST" action="NovaSenha.php" class="login-form" autocomplete="off">
                 <p class="txt-email-destino">
                     Para: <strong><?php echo htmlspecialchars($_SESSION['recuperacao_email'] ?? ''); ?></strong>
-                </p>
+                </p> <br>
 
                 <div class="input-group">
-                    <input type="text" id="codigo" name="codigo" maxlength="6" placeholder="Código (6 dígitos)" required>
+                    <input type="text" id="codigo" name="codigo" maxlength="6" placeholder="Código (6 dígitos)" required autocomplete="off" onfocus="this.placeholder=''" onblur="this.placeholder='Código (6 dígitos)'">
                 </div>
                 <div class="input-group">
-                    <input type="password" id="nova_senha" name="nova_senha" placeholder="Nova Senha" required>
+                    <input type="password" id="nova_senha" name="nova_senha" placeholder="Nova Senha" required autocomplete="new-password" onfocus="this.placeholder=''" onblur="this.placeholder='Nova Senha'">
                 </div>
                 <div class="input-group">
-                    <input type="password" id="confirma_senha" name="confirma_senha" placeholder="Confirme a Senha" required>
+                    <input type="password" id="confirma_senha" name="confirma_senha" placeholder="Confirme a Senha" required autocomplete="new-password" onfocus="this.placeholder=''" onblur="this.placeholder='Confirme a Senha'">
                 </div>
 
                 <div class="botoes-container">

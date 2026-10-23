@@ -52,6 +52,17 @@ body {
     margin-bottom: 5px;
 }
 
+/* Container sem fundo/caixa preta */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    width: 340px;
+}
+
 .login-form {
     display: flex;
     flex-direction: column;
@@ -67,25 +78,29 @@ body {
     -webkit-text-fill-color: goldenrod;
 }
 
-input, select {
+/* Estilo Base dos Inputs e Select com Alinhamento à Esquerda */
+input, select,
+.input-group input,
+.input-group select {
     width: 280px;
     height: 40px;
     border: 2px solid rgba(102, 96, 61, 1);
     background-color: rgba(102, 96, 61, 1);
     color: goldenrod;
     font-size: 16px;
-    padding: 10px;
+    padding: 10px 15px !important; /* Espaçamento para o texto não colar na borda */
     outline: none;
     border-radius: 6px;
-    text-align: center;
+    text-align: left !important; /* Alinhado ao início do bloco */
     transition: all 0.2s ease;
     caret-color: #ffffff; /* Cursor pisca-pisca em branco */
 }
 
-/* Estilização das opções do Select */
+/* Estilização das Opções do Select */
 select option {
     background-color: rgb(51, 49, 41);
     color: goldenrod;
+    text-align: left !important;
 }
 
 /* Transição do Placeholder */
@@ -95,16 +110,17 @@ input::placeholder {
     transition: opacity 0.2s ease;
 }
 
-/* Hover nos campos */
+/* Hover nos Campos */
 .input-group input:hover, 
 .input-group select:hover {
     background-color: rgb(70, 66, 45);
     border: 2px solid rgb(124, 118, 81);
     -webkit-text-fill-color: rgb(224, 182, 75);
     transform: scale(1.02);
+    text-align: left !important;
 }
 
-/* Efeito ao Clicar/Focar no campo (Placeholder some e destaca o campo) */
+/* Efeito ao Clicar / Focar no Campo */
 input:focus::placeholder {
     opacity: 0;
 }
@@ -118,6 +134,7 @@ input:focus::placeholder {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
     transform: scale(1.02);
     outline: none;
+    text-align: left !important;
 }
 
 .botoes-container {

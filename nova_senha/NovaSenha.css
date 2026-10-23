@@ -17,7 +17,7 @@ body {
     background-position: center;
     font-family: Arial, sans-serif;
     text-align: center;
-    color: #ffffff; /* Texto geral em branco */
+    color: #ffffff;
 }
 
 .logo-container {
@@ -49,19 +49,19 @@ body {
 }
 
 .slogan {
-    color: #ffffff !important;
+    color: goldenrod;
     font-size: 18px;
     margin-bottom: 5px;
 }
 
+/* Removido o bloco/fundo preto envolvente */
 .login-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.85);
-    padding: 30px;
-    border-radius: 12px;
-    border: 2px solid rgba(102, 96, 61, 1);
+    background-color: transparent;
+    padding: 0;
+    border: none;
     width: 340px;
     color: #ffffff !important;
 }
@@ -80,29 +80,56 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 12px;
+    -webkit-text-fill-color: goldenrod;
 }
 
-input {
-    width: 100%;
-    height: 42px;
+/* Estilização dos Inputs idêntica às outras telas */
+input,
+.input-group input {
+    width: 280px;
+    height: 40px;
     border: 2px solid rgba(102, 96, 61, 1);
     background-color: rgba(102, 96, 61, 1);
-    color: #ffffff !important; /* Texto digitado no input em branco */
-    font-size: 15px;
-    padding: 10px;
+    color: goldenrod;
+    font-size: 16px;
+    padding: 10px 15px !important; /* Espaçamento interno à esquerda */
     outline: none;
     border-radius: 6px;
-    text-align: center;
+    text-align: left !important; /* Texto alinhado no início do bloco */
+    transition: all 0.2s ease;
+    caret-color: #ffffff; /* Cursor em branco */
 }
 
+/* Placeholder */
 input::placeholder {
-    color: #e0e0e0; /* Placeholder em cinza claro/quase branco */
+    color: goldenrod;
+    opacity: 1;
+    transition: opacity 0.2s ease;
 }
 
-input:hover, input:focus {
+/* Hover nos campos */
+.input-group input:hover {
     background-color: rgb(70, 66, 45);
     border: 2px solid rgb(124, 118, 81);
-    color: #ffffff !important;
+    -webkit-text-fill-color: rgb(224, 182, 75);
+    transform: scale(1.02);
+    text-align: left !important;
+}
+
+/* Efeito ao clicar / focar no campo */
+input:focus::placeholder {
+    opacity: 0;
+}
+
+.input-group input:focus {
+    background-color: rgb(87, 84, 74);
+    border: 2px solid #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    transform: scale(1.02);
+    outline: none;
+    text-align: left !important;
 }
 
 .botoes-container {
@@ -115,7 +142,7 @@ input:hover, input:focus {
 }
 
 .btn-submit {
-    width: 100%;
+    width: 280px;
     height: 45px;
     cursor: pointer;
     font-size: 18px;
@@ -128,20 +155,21 @@ input:hover, input:focus {
 }
 
 .btn-submit:hover {
-    transform: scale(1.02);
+    transform: scale(1.04);
     background-color: rgb(87, 84, 74);
-    color: #ffffff !important; /* Texto do botão em branco no hover */
+    color: rgb(231, 183, 61);
     border: 2px solid rgb(124, 118, 81);
 }
 
 .btn-link {
-    color: #ffffff !important; /* Links em branco */
+    color: goldenrod;
     text-decoration: none;
     font-size: 14px;
+    transition: all 0.2s ease;
 }
 
 .btn-link:hover {
-    color: goldenrod !important;
+    color: rgb(231, 183, 61);
     text-decoration: underline;
 }
 
@@ -154,7 +182,7 @@ p, span, label, strong,
 
 .msg-box,
 .msg-box strong {
-    width: 100%;
+    width: 280px;
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 6px;
